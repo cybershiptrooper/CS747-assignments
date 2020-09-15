@@ -1,0 +1,16 @@
+opening files-
+https://www.w3schools.com/python/python_file_handling.asp
+
+inheritance-
+https://www.w3schools.com/python/python_inheritance.asp
+
+random seed-
+https://stackoverflow.com/questions/21494489/what-does-numpy-random-seed0-do
+
+other numpy sampler methods (https://numpy.org)-
+https://numpy.org/doc/stable/reference/random/generated/numpy.random.choice.html
+https://numpy.org/doc/stable/reference/random/generated/numpy.random.binomial.html
+
+sampling algorithms-
+Slides
+
