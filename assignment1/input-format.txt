@@ -1,1 +1,1 @@
-python bandit.py ../instances/i-1.txt epsilon-greedy 69 0.3 420
+python bandit.py ../instances/i-1.txt kl-ucb 69 0.3 420

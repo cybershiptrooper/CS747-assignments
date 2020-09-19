@@ -34,5 +34,4 @@ if __name__ == '__main__':
 
 #todo-
 #where do I put the seeds??
-#klucb, thompson
 #thompson with hint

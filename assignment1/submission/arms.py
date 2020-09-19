@@ -14,7 +14,7 @@ class bernoulliArms():
 		self.Pavg = np.zeros(k)
 		self.Psum = np.zeros(k)
 		self.armpulls = np.zeros(k)
-		self.totalPulls = 0;
+		self.totalPulls = 0; #not essential-save time for np.sum(Psum)
 
 	def print_arms(self):
 		for i in self.instances:
@@ -24,10 +24,10 @@ class bernoulliArms():
 		if(seed > -1):
 			np.random.seed(seed)
 		rewards = np.random.binomial(1, self.instances[arm], n)
-		self.updatePavg(arm, rewards)
+		self.updateArms(arm, rewards)
 		return rewards
 
-	def updatePavg(self, arm, rewards):
+	def updateArms(self, arm, rewards):
 		self.Psum[arm] += np.sum(rewards)
 		self.armpulls[arm] += len(rewards)
 		self.Pavg[arm] = self.Psum[arm]/self.armpulls[arm]
