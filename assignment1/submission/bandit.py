@@ -17,15 +17,19 @@ class bandit(sampler):
 			rewards = self.sample()
 			REW += np.sum(rewards)
 
-		REG = self.hz*self.optimalArm()
-		return REG - REW
+		REG = self.hz*self.optimalArm() - REW
+		return REW, REG
 
 def main():
-	if(len(sys.argv) != 6):
+	if(len(sys.argv) != 11):
 		print("Please enter valid arguments")
 		sys.exit()
-	bandit_instance = bandit(sys.argv[1:])
-	print(bandit_instance.run())
+
+	bandit_instance = bandit(sys.argv[2::2])
+	REW, REG = bandit_instance.run()
+	for arg in sys.argv[2::2]:
+		print(arg, end = ", ")
+	print(REG)
 
 if __name__ == '__main__':
 	main()
