@@ -19,13 +19,13 @@ class bandit(sampler):
 		self.hz = int(arg[4])
 
 	def run(self, seeded = True):
-		REW = 0
+		REW = 0.0
 		if(seeded): np.random.seed(self.seed)
 		for i in range(self.hz):
 			rewards = self.sample()
 			REW += np.sum(rewards)
 		#regret = reward - expected_optimal 
-		REG = self.hz*self.optimalArm() - REW
+		REG = float(self.hz)*self.optimalArm() - REW
 		return REG#, self.armpulls
 
 def main():
@@ -44,5 +44,7 @@ if __name__ == '__main__':
 
 
 #todo-
-#thompson with hint
+#why is regret not monotonous in thompson??
+#-> negative regret
+#improve thompson with hint
 #T4, T3, data generation (~6-8 hrs)

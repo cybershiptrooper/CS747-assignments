@@ -45,19 +45,16 @@ class sampler(bernoulliArms):
 		return None
 
 	def epsilonGreedy(self):
-		# np.random.seed(self.seed)
 		s = np.random.uniform()
 		if(s < self.eps):
 			#choose random arm
-			# np.random.seed(self.seed)
 			arm = np.random.choice(self.k)
 		else:
 			#choose a random arm with max Pavg
-			#np.random.seed(self.seed)
 			arm = argmax(self.Pavg)
 
 		#return seeded reward
-		return self.pull(arm) #,seed = self.seed)
+		return self.pull(arm)
 			
 	def ucb(self):
 		#do round robin if nobody sampled
@@ -71,11 +68,10 @@ class sampler(bernoulliArms):
 		ucb = self.Pavg + uta
 
 		#sample max ucb
-		# np.random.seed(self.seed)
-		arm = argmax(ucb)
+		arm = np.argmax(ucb)
 
 		#return seeded reward
-		return self.pull(arm)#, seed = self.seed)
+		return self.pull(arm)
 
 	def klUCB(self, c = 3, precision = 1e-06):
 		#round robin
@@ -110,34 +106,34 @@ class sampler(bernoulliArms):
 			#update klucb
 			klucb[i] = q
 		#get arm to pull
-		#np.random.seed(self.seed)
 		arm = argmax(klucb)
 		
-		#return seeded reward
-		return self.pull(arm)#, seed = self.seed)
+		#return reward
+		return self.pull(arm)
 
 	def thompson(self):
 		#create beta choice vector
 		s = self.Psum; #Sum of rewards = number of success for bernoulli
 		f = self.armpulls - s
 		beta = np.random.beta(s+1, f+1)
-		#choose maximal beta as arm
-		#np.random.seed(self.seed)
+		#choose maximal beta as arm and pull
 		arm = np.argmax(beta)
-		return self.pull(arm)#, seed = self.seed)
+		return self.pull(arm)
 
 	def hintedThompson(self):
 		hint_ls = self.optimalArm()
-		hint_s = int(hint_ls*100)
-		hint_f = int(100.0-(hint_ls)*100)
-		#what if we take the prior to be with mean = largest of instances?
 		s = self.Psum #Sum of rewards = number of success for bernoulli
-		s_hinted = s + hint_s - 1
 		f = self.armpulls - s
-		f_hinted = f + hint_f - 1
-		#np.random.seed(self.seed)
-		beta = np.random.beta(s_hinted, f_hinted)
+		beta = np.random.beta(s+1, f+1)
+		#Hoeffding inequality
+		#beta += np.exp(-self.armpulls*(self.Pavg - hint_ls)**2)
+		#KL inequality
+		for a in range(self.k):
+			beta[a] += np.exp(-self.armpulls[a]*kl(self.Pavg[a], hint_ls))
+		#print(beta)
 		#choose maximal beta as arm
-		#np.random.seed(self.seed)
-		arm = argmax(beta)
-		return self.pull(arm)#, seed = self.seed)
+		arm = np.argmax(beta)
+		return self.pull(arm)
+
+#what if we take the prior to be with mean = largest of instances? 
+#-> Nope. Lol.

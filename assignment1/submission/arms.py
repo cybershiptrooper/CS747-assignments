@@ -7,7 +7,7 @@ class bernoulliArms():
 		instances = []
 		for instance in f.readlines():
 			instances.append(float(instance.rstrip()))
-		self.instances = np.array(instances)
+		self.__instances = np.array(instances)
 		
 		k = len(instances) 
 		self.k = k
@@ -16,12 +16,8 @@ class bernoulliArms():
 		self.armpulls = np.zeros(k)
 		self.totalPulls = 0; #not essential-save time for np.sum(Psum)
 
-	def print_arms(self):
-		for i in self.instances:
-			print(i)
-
 	def pull(self, arm, n=1):
-		rewards = np.random.binomial(1, self.instances[arm], n)
+		rewards = np.random.binomial(1, self.__instances[arm], n)
 		self.updateArms(arm, rewards)
 		return rewards
 
@@ -32,4 +28,4 @@ class bernoulliArms():
 		self.totalPulls += len(rewards)
 		
 	def optimalArm(self):
-		return np.max(self.instances)
+		return np.max(self.__instances)
