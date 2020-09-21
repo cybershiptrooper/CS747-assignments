@@ -34,37 +34,36 @@ class sampler(bernoulliArms):
 		return p*np.log(p/q) + (1-p)*np.log((1-p)/(1-q))
 
 	def isclose(a, b, precision=1e-06):
-		return abs(a-b) <= precision #&& (b>a)
+		return (abs(a-b) <= precision) #and (b>a)
 
 	#algos
 	def roundRobin(self):
 		'''Pull each arm one time'''
 		for arm in range(self.k):
 			if(self.armpulls[arm] == 0):
-				return self.pull(arm, seed = self.seed)
+				return self.pull(arm)
 		return None
 
 	def epsilonGreedy(self):
-		np.random.seed(self.seed)
+		# np.random.seed(self.seed)
 		s = np.random.uniform()
 		if(s < self.eps):
 			#choose random arm
-			np.random.seed(self.seed)
+			# np.random.seed(self.seed)
 			arm = np.random.choice(self.k)
 		else:
 			#choose a random arm with max Pavg
-			np.random.seed(self.seed)
+			#np.random.seed(self.seed)
 			arm = argmax(self.Pavg)
 
 		#return seeded reward
-		return self.pull(arm, seed = self.seed)
+		return self.pull(arm) #,seed = self.seed)
 			
 	def ucb(self):
 		#do round robin if nobody sampled
 		reward = self.roundRobin()
 		if(not (reward is None)):
 			return reward
-
 		#calculata uta, ucb
 		pulls = self.armpulls * 1.0
 		uta = np.ones_like(pulls)
@@ -72,11 +71,11 @@ class sampler(bernoulliArms):
 		ucb = self.Pavg + uta
 
 		#sample max ucb
-		np.random.seed(self.seed)
+		# np.random.seed(self.seed)
 		arm = argmax(ucb)
 
 		#return seeded reward
-		return self.pull(arm, seed = self.seed)
+		return self.pull(arm)#, seed = self.seed)
 
 	def klUCB(self, c = 3, precision = 1e-06):
 		#round robin
@@ -85,14 +84,18 @@ class sampler(bernoulliArms):
 
 		klucb = np.zeros(self.k)
 		t = self.totalPulls
-		RHS = np.log(t) + c*np.log(np.log(t))
+		logt_term = np.log(t) + c*np.log(np.log(t))
+
 		#make klucb matrix
 		for i in range(self.k):
 			p = self.Pavg[i]
+			RHS = logt_term / self.armpulls[i]
+
 			#boundary
 			if(p == 1 or RHS < 0):
 				klucb[i] = p
 				continue
+
 			#binary search
 			lb, ub = p, 1.0
 			q = (ub + p)/2.0
@@ -103,27 +106,38 @@ class sampler(bernoulliArms):
 				elif(LHS < RHS):lb = q
 				q = (ub + lb)/2.0
 				LHS = kl(p,q)
-			#print(lb, ub, LHS, RHS, q,'-------', sep = '\n')
+
 			#update klucb
 			klucb[i] = q
-
 		#get arm to pull
-		np.random.seed(self.seed)
+		#np.random.seed(self.seed)
 		arm = argmax(klucb)
-
+		
 		#return seeded reward
-		return self.pull(arm, seed = self.seed)
+		return self.pull(arm)#, seed = self.seed)
 
 	def thompson(self):
 		#create beta choice vector
 		s = self.Psum; #Sum of rewards = number of success for bernoulli
 		f = self.armpulls - s
-		np.random.seed(self.seed)
 		beta = np.random.beta(s+1, f+1)
 		#choose maximal beta as arm
-		np.random.seed(self.seed)
-		arm = argmax(beta)
-		return self.pull(arm, seed = self.seed)
+		#np.random.seed(self.seed)
+		arm = np.argmax(beta)
+		return self.pull(arm)#, seed = self.seed)
 
 	def hintedThompson(self):
-		pass
+		hint_ls = self.optimalArm()
+		hint_s = int(hint_ls*100)
+		hint_f = int(100.0-(hint_ls)*100)
+		#what if we take the prior to be with mean = largest of instances?
+		s = self.Psum #Sum of rewards = number of success for bernoulli
+		s_hinted = s + hint_s - 1
+		f = self.armpulls - s
+		f_hinted = f + hint_f - 1
+		#np.random.seed(self.seed)
+		beta = np.random.beta(s_hinted, f_hinted)
+		#choose maximal beta as arm
+		#np.random.seed(self.seed)
+		arm = argmax(beta)
+		return self.pull(arm)#, seed = self.seed)

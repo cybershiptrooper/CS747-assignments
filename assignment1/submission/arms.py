@@ -20,9 +20,7 @@ class bernoulliArms():
 		for i in self.instances:
 			print(i)
 
-	def pull(self, arm, n=1, seed = -1):
-		if(seed > -1):
-			np.random.seed(seed)
+	def pull(self, arm, n=1):
 		rewards = np.random.binomial(1, self.instances[arm], n)
 		self.updateArms(arm, rewards)
 		return rewards
@@ -32,6 +30,6 @@ class bernoulliArms():
 		self.armpulls[arm] += len(rewards)
 		self.Pavg[arm] = self.Psum[arm]/self.armpulls[arm]
 		self.totalPulls += len(rewards)
-	
+		
 	def optimalArm(self):
-		return max(self.instances)
+		return np.max(self.instances)
