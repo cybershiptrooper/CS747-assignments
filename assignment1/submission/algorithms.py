@@ -68,7 +68,7 @@ class sampler(bernoulliArms):
 		ucb = self.Pavg + uta
 
 		#sample max ucb
-		arm = np.argmax(ucb)
+		arm = argmax(ucb)
 
 		#return seeded reward
 		return self.pull(arm)
