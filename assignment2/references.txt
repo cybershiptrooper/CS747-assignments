@@ -1,0 +1,8 @@
+Library: argparse-
+https://docs.python.org/3/library/argparse.html
+
+Raising errors- 
+https://docs.python.org/3/tutorial/errors.html
+
+Reading files-
+https://www.w3schools.com/python/python_file_open.asp
