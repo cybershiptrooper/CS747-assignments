@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from algorithm import Solver
+from algorithms import Solver
 
 class Planner(Solver):
 	"""wrapper class for solving algorithms"""
