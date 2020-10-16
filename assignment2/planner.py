@@ -1,14 +1,14 @@
-import sys
 import argparse
 import numpy as np
+from algorithm import Solver
 
-class Planner():
+class Planner(Solver):
 	"""wrapper class for solving algorithms"""
 	def __init__(self, mdp, algorithm):
-		super(Planner, self).__init__()
 		self.mdp_path = mdp
 		self.algo = algorithm
-		self.mdp = self.getMDP(printMDP = True)
+		mdp = self.getMDP(printMDP = True)
+		super().__init__(mdp)
 
 	def printArgs(self):
 		print(self.mdp_path, self.algo)
@@ -54,6 +54,15 @@ class Planner():
 
 		return mdp
 
+	def solve(self):
+		if(self.algorithm=="vi"):
+			self.valueIter()
+		elif(self.algorithm=="lp"):
+			self.linearProgram()
+		elif(self.algorithm=="hpi"):
+			self.policyIter()
+		else:
+			raise Exception("please enter valid solver algorithm")
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -68,6 +77,6 @@ if __name__ == '__main__':
 	if args.mdp=="":
 		raise Exception("please provide valid path for mdp")
 	elif args.algorithm=="":
-		raise Exception("please provide valid algorithm")
+		raise Exception("please provide valid solver algorithm")
 	planner = Planner(args.mdp, args.algorithm)
 	#planner.printArgs()
