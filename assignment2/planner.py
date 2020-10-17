@@ -6,9 +6,10 @@ class Planner(Solver):
 	"""wrapper class for solving algorithms"""
 	def __init__(self, mdp, algorithm):
 		self.mdp_path = mdp
-		self.algo = algorithm
-		mdp = self.getMDP(printMDP = True)
-		super().__init__(mdp)
+		self.algorithm = algorithm
+		mdp = self.getMDP(printMDP = False)
+		super().__init__(mdp["S"], mdp["A"], mdp["T"], 
+			mdp["R"], mdp["gamma"])
 
 	def printArgs(self):
 		print(self.mdp_path, self.algo)
@@ -50,17 +51,18 @@ class Planner(Solver):
 			print("R shape:",R.shape)
 
 		f.close()
-		mdp = {"S":S, "A":A, "T":T, "R":R, "gamma":gamma, "start":start, "end":end, "mdptype":mdptype }
+		mdp = {"S":S, "A":A, "T":T, "R":R, "gamma":gamma, 
+		"start":start, "end":end, "mdptype":mdptype }
 
 		return mdp
 
 	def solve(self):
 		if(self.algorithm=="vi"):
-			self.valueIter()
+			return self.valueIter()
 		elif(self.algorithm=="lp"):
-			self.linearProgram()
+			return self.linearProgram()
 		elif(self.algorithm=="hpi"):
-			self.policyIter()
+			return self.policyIter()
 		else:
 			raise Exception("please enter valid solver algorithm")
 
@@ -70,8 +72,8 @@ if __name__ == '__main__':
 	######################## CHANGE THE DEFAULTS TO "" IN PARSER ##################################
 	###############################################################################################
 	parser.add_argument("--mdp", type = str, default = "data/mdp/continuing-mdp-10-5.txt", help = "Path to the mdp") 
-	parser.add_argument("--algorithm", type = str, default = "vi", help=
-			"Name of solving algorithm. Must be one of vi(value iteration), hpi(Howard's policy iteration), or lp(linear programming)")
+	parser.add_argument("--algorithm", type = str, default = "vi", help="Name of solving algorithm."+
+		" Must be one of vi(value iteration), hpi(Howard's policy iteration), or lp(linear programming)")
 
 	args = parser.parse_args()
 	if args.mdp=="":
@@ -79,4 +81,6 @@ if __name__ == '__main__':
 	elif args.algorithm=="":
 		raise Exception("please provide valid solver algorithm")
 	planner = Planner(args.mdp, args.algorithm)
-	#planner.printArgs()
+	V, pi= planner.solve()
+	for i in range(len(V)):
+		print(V[i], pi[i])

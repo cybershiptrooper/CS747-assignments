@@ -52,7 +52,8 @@ def encode(path):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--grid", type=str, default = "", help="path to maze file that needs to be encoded")
+	parser.add_argument("--grid", type=str, default = "", 
+		help="path to maze file that needs to be encoded")
 	args = parser.parse_args()
 	encode(args.grid)
 
@@ -60,3 +61,4 @@ if __name__ == '__main__':
 #todo here:-
 #what to do with gamma? what to do with reward?
 #do we have multiple start and end points?
+#make sure the N, S, E, W reference is correct (or does it matter)
