@@ -9,7 +9,6 @@ class Solver():
 		self.T = T 			#SxAxS
 		self.R = R			#SxAxS
 		self.gamma = gamma  #[0,1]
-
 		#other util variables
 		self.PR = (T*R).sum(axis=2)
 
@@ -17,22 +16,22 @@ class Solver():
 		''' Value iteration method '''
 		#init V0 as 0
 		V = np.zeros(self.S)
-		pi = np.zeros_like(V)
+		pi = np.zeros(self.S, dtype = "int")
 		#use Bellman update iteratively
-		# i = 0
+		i = 0
 		while True:
 			#V(i+1) <- max(PR + PV(i), axis = actions) 
 			Vmat = self.PR + self.gamma*self.T.dot(V)
 			Vnew = np.max(Vmat,axis=1)
 			#difference < error => done
 			diff = np.sum(abs(Vnew-V))
-			if (diff<= error): #or (i >= 100000):
+			if (diff<= error) or (i >= 100000):
 				pi = np.argmax(Vmat,axis=1)
 				break;
 			V = Vnew
-			# i += 1
-			# if not (i%1000):
-			# 	print(i, diff)
+			i += 1
+			if not (i%1000):
+				print(i, diff)
 		#print(diff)
 		return V, pi
 

@@ -56,13 +56,13 @@ class Planner(Solver):
 
 		return mdp
 
-	def solve(self):
+	def solve(self, error = 1e-12):
 		if(self.algorithm=="vi"):
-			return self.valueIter()
+			return self.valueIter(error=error)
 		elif(self.algorithm=="lp"):
-			return self.linearProgram()
+			return self.linearProgram(error=error)
 		elif(self.algorithm=="hpi"):
-			return self.policyIter()
+			return self.policyIter(error=error)
 		else:
 			raise Exception("please enter valid solver algorithm")
 
