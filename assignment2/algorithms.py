@@ -1,5 +1,5 @@
 import numpy as np
-import pulp
+import pulp as p
 
 class Solver():
 	"""Consists of three solving algorithms"""
@@ -64,4 +64,44 @@ class Solver():
 
 	def linearProgram(self, error = 1e-12):
 		''' Linear Programming based solver '''
-		pass
+		#Create LP Minimization problem
+		lp_problem = p.LpProblem('best-Vpi', p.LpMinimize)
+
+		#create problem variables
+		V = []
+		for i in range(self.S):
+			V.append(p.LpVariable("v"+str(i), 
+				cat = p.LpContinuous))
+		#objective function
+		lp_problem += p.lpSum(V)
+		#constraints
+		PV = (self.T).dot(V)
+		constraints = self.PR + self.gamma*PV
+		for s in range(self.S):
+			for a in range(self.A):
+				lp_problem += V[s] >= constraints[s][a]
+
+		#print(lp_problem)
+		status = lp_problem.solve(p.PULP_CBC_CMD(msg = 0)) #solve
+		#print(p.LpStatus[status])   # The solution status 
+
+		Vstar = np.zeros(self.S)
+		for i in range(self.S):
+			Vstar[i] = p.value(V[i])
+
+		#use the Bellman backup to get back pistar
+		PVstar = (self.T).dot(Vstar)
+		pistar = np.argmax(self.PR + self.gamma*PVstar, axis = 1)
+		#do policy evaluation for finding V*(lp gives inaccurate V*)
+		i = 0
+		Vstar = np.zeros(self.S)
+		while True:
+			Vmat = self.PR + self.gamma*self.T.dot(Vstar)
+			Vpi = Vmat[np.arange(self.S), pistar]
+			#difference < error => done
+			diff = np.sum(abs(Vpi-Vstar))
+			if diff <= error:# or j >= 1000:
+				break
+			Vstar = Vpi
+
+		return Vstar, pistar

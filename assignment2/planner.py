@@ -68,11 +68,8 @@ class Planner(Solver):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	###############################################################################################
-	######################## CHANGE THE DEFAULTS TO "" IN PARSER ##################################
-	###############################################################################################
-	parser.add_argument("--mdp", type = str, default = "data/mdp/continuing-mdp-10-5.txt", help = "Path to the mdp") 
-	parser.add_argument("--algorithm", type = str, default = "vi", help="Name of solving algorithm."+
+	parser.add_argument("--mdp", type = str, default = "", help = "Path to the mdp") 
+	parser.add_argument("--algorithm", type = str, default = "", help="Name of solving algorithm."+
 		" Must be one of vi(value iteration), hpi(Howard's policy iteration), or lp(linear programming)")
 
 	args = parser.parse_args()

@@ -6,3 +6,13 @@ https://docs.python.org/3/tutorial/errors.html
 
 Reading files-
 https://www.w3schools.com/python/python_file_open.asp
+
+VI, HPI Algorithms-(lecture slides)
+https://drive.google.com/file/d/1LnDikveMf0CPxbohKzFiUc2TYVHG4ORE/view
+https://drive.google.com/file/d/1x1devOk06HvF6vsiV1reQlBgFbZTddiY/view
+
+Pulp-
+https://www.geeksforgeeks.org/python-linear-programming-in-pulp/
+https://coin-or.github.io/pulp/
+https://github.com/coin-or/pulp/discussions/339
+https://coin-or.github.io/pulp/search.html?q=CBC&check_keywords=yes&area=default
