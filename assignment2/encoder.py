@@ -27,46 +27,47 @@ def encode(path):
 		else:
 			print(i,end=" ")
 	t = 1.0
-	r_max = 0.5
-	#North
-	for x in range(S[0]):
-		for y in range(1,S[1]):
-			r= 0.0
-			if(grid[x,y] == 3 or grid[x,y-1]==1):
-				continue
-			elif(grid[x,y-1] == 3):
-				r = r_max
-			print("transition", x*y, 0, x*(y-1),  r, t)
-	#South
-	for x in range(S[0]):
-		for y in range(S[1]-1):
-			r = 0.0
-			if(grid[x,y] == 3 or grid[x,y+1]==1):
-				continue
-			elif(grid[x,y+1] == 3):
-				r = r_max
-			print("transition", x*y, 1, x*(y+1), r, t)
-	#East
-	for x in range(1,S[0]):
-		for y in range(S[1]-1):
-			r= 0.0
-			if(grid[x,y] == 3 or grid[x-1,y]==1):
-				continue
-			elif(grid[x-1,y] == 3):
-				r = r_max
-			print("transition", x*y, 2, y*(x-1),  r, t)
+	r_norm = -0.01
+	r_max = 1
 	#West
-	for x in range(S[0]-1):
-		for y in range(S[1]):
-			r= 0.0
-			if(grid[x,y] == 3 or grid[x+1,y]==1):
+	for y in range(1,S[1]-1):
+		for x in range(1,S[0]-1):
+			r= r_norm
+			if(grid[x,y-1]==1 or grid[x,y] == 3 or grid[x,y] ==1): #On Wall/ Next to wall/ On End
 				continue
-			elif(grid[x+1,y] == 3):
+			elif(grid[x,y-1] == 3): #next to end
 				r = r_max
-			print("transition", x*y, 3, y*(x+1),  r, t)
+			print("transition", x+y*(S[1]), 0, x+(y-1)*S[1],  r, t)
+	#East
+	for y in range(1,S[1]-1):
+		for x in range(1,S[0]-1):	
+			r = r_norm
+			if(grid[x,y] == 3 or grid[x,y+1]==1 or grid[x,y] ==1): #On Wall/ Next to wall/ On End
+				continue
+			elif(grid[x,y+1] == 3): #next to end
+				r = r_max
+			print("transition", x+y*(S[1]), 1, x+(y+1)*S[1], r, t)
+	#North
+	for y in range(1,S[1]-1):
+		for x in range(1,S[0]-1):	
+			r= r_norm
+			if(grid[x,y] == 3 or grid[x-1,y]==1 or grid[x,y] ==1): #On Wall/ Next to wall/ On End
+				continue
+			elif(grid[x-1,y] == 3): #next to end
+				r = r_max
+			print("transition", x+y*(S[1]), 2, x+y*(S[1])-1,  r, t)
+	#South
+	for y in range(1,S[1]-1):
+		for x in range(1,S[0]-1):	
+			r= r_norm
+			if(grid[x,y] == 3 or grid[x+1,y]==1 or grid[x,y] ==1):	#On Wall/ Next to wall/ On End
+				continue
+			elif(grid[x+1,y] == 3): #next to end
+				r = r_max
+			print("transition", x+y*(S[1]), 3, x+y*(S[1])+1,  r, t)
 
 	print("mdptype", "episodic")
-	print("gamma", 0.69)#what to do with gamma??
+	print("gamma", 1)#what to do with gamma??
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()

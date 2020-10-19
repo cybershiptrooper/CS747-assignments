@@ -25,14 +25,16 @@ class Solver():
 			Vnew = np.max(Vmat,axis=1)
 			#difference < error => done
 			diff = np.sum(abs(Vnew-V))
-			if (diff<= error) or (i >= 100000):
+			if (diff<= error):# or (i >= 100000):
 				pi = np.argmax(Vmat,axis=1)
 				break;
 			V = Vnew
 			i += 1
-			if not (i%1000):
+			if not (i%4000):
 				print(i, diff)
 		#print(diff)
+		# a = -np.prod(np.prod(T[np.arange(25)] == 0, axis=1),axis = 1)
+		# pi[np.where(a == -1)] = -1
 		return V, pi
 
 	def policyIter(self, error = 1e-12):
