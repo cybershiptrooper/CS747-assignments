@@ -1,3 +1,4 @@
+#! /usr/bin/python
 import argparse
 import numpy as np
 from algorithms import Solver
@@ -23,7 +24,7 @@ class Planner(Solver):
 		start = int(f.readline().split()[-1])
 		end = np.array(f.readline().split()[1:], dtype = "int")
 		#get transition probability measure and reward function
-		T = np.zeros((S,A,S), dtype="float64")
+		T = np.zeros((S,A,S), dtype="float64") 
 		R = np.zeros_like(T)
 		line = []
 		for i in range(S*A*S):

@@ -18,7 +18,7 @@ class Solver():
 		V = np.zeros(self.S)
 		pi = np.zeros(self.S, dtype = "int")
 		#use Bellman update iteratively
-		i = 0
+		# i = 0
 		while True:
 			#V(i+1) <- max(PR + PV(i), axis = actions) 
 			Vmat = self.PR + self.gamma*self.T.dot(V)
@@ -29,9 +29,9 @@ class Solver():
 				pi = np.argmax(Vmat,axis=1)
 				break;
 			V = Vnew
-			i += 1
-			if not (i%4000):
-				print(i, diff)
+			# i += 1
+			# if not (i%4000):
+			# 	print(i, diff)
 		#print(diff)
 		# a = -np.prod(np.prod(T[np.arange(25)] == 0, axis=1),axis = 1)
 		# pi[np.where(a == -1)] = -1
@@ -45,7 +45,7 @@ class Solver():
 		i = 0
 		while True:
 			#evaluate current policy
-			#j = 0
+			j = 0
 			while True:
 				Vmat = self.PR + self.gamma*self.T.dot(V)
 				Vpi = Vmat[np.arange(self.S), pi]
@@ -54,13 +54,17 @@ class Solver():
 				if diff <= error:# or j >= 1000:
 					break
 				V = Vpi
+				# j+=1
+				# if(not j%100):
+				# 	print(j, diff)
 			#improve all improvable states greedily
 			newpi = np.argmax(Vmat, axis = 1)
 			if((newpi == pi).all()): #or i >= 1000:
 				break;
 			pi = newpi
-			#i+=1
-		#print(i)
+			i+=1
+			if(not i%1000):
+				print(i, diff)
 		return V, pi
 
 	def linearProgram(self, error = 1e-12):
