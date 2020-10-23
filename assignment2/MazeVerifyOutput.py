@@ -3,7 +3,7 @@ import random,argparse,sys,subprocess,os
 parser = argparse.ArgumentParser()
 import numpy as np
 random.seed(0)
-
+import time
 input_file_ls = ["data/maze/grid10.txt","data/maze/grid20.txt","data/maze/grid30.txt","data/maze/grid40.txt","data/maze/grid50.txt","data/maze/grid60.txt","data/maze/grid70.txt","data/maze/grid80.txt","data/maze/grid90.txt","data/maze/grid100.txt"]
 #input_flies_ls = ["data/maze/grid30.txt"]
 
@@ -12,6 +12,7 @@ class MazeVerifyOutput:
         
         counter = 1
         for in_file in input_file_ls:
+            start = time.time()
             print("\n\ntest instance",counter,"-"*100)
             counter+=1
             cmd_encode = "python","encoder.py","--grid",in_file
@@ -38,7 +39,7 @@ class MazeVerifyOutput:
             if not mistakeFlag:
                 print("ALL CHECKS PASSED! \nChecking the correctness of you solution...")
                 self.verifyOutput(shortestPath,in_file)
-                
+            print("Time taken:", time.time() - start)
             
             
     def traversePath(self,path,in_file):

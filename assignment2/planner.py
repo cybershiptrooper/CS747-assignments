@@ -10,7 +10,7 @@ class Planner(Solver):
 		self.algorithm = algorithm
 		mdp = self.getMDP(printMDP = False)
 		super().__init__(mdp["S"], mdp["A"], mdp["T"], 
-			mdp["R"], mdp["gamma"])
+			mdp["R"], mdp["gamma"],)# mdp["mdptype"], mdp["end"])
 
 	def printArgs(self):
 		print(self.mdp_path, self.algo)

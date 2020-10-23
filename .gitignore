@@ -1,6 +1,7 @@
 #data for graphs
 data-for-graph/
 *Data*.txt
+task2commands.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

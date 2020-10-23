@@ -15,4 +15,7 @@ Pulp-
 https://www.geeksforgeeks.org/python-linear-programming-in-pulp/
 https://coin-or.github.io/pulp/
 https://github.com/coin-or/pulp/discussions/339
-https://coin-or.github.io/pulp/search.html?q=CBC&check_keywords=yes&area=default
+further optimisation-
+https://groups.google.com/g/pulp-or-discuss/c/p1N2fkVtYyM?pli=1
+https://stackoverflow.com/questions/46883624/pulp-slow-when-adding-many-constraints
+https://coin-or.github.io/pulp/CaseStudies/a_sudoku_problem.html

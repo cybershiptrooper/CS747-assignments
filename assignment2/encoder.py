@@ -29,7 +29,7 @@ def encode(path):
 			print(i,end=" ")
 	t = 1.0
 	r_norm = -0.0
-	r_max = 10
+	r_max = 1.0
 	#West
 	for y in range(1,S[1]-1):
 		for x in range(1,S[0]-1):
@@ -75,7 +75,7 @@ def encode(path):
 				r = r_max
 			print("transition", x+y*(S[1]), 3, x+y*(S[1])+1,  r, t)
 
-	print("mdptype", "episodic")
+	print("mdptype", "continuous")
 	print("gamma", 1-0.01/np.prod(S))#what to do with gamma??
 
 if __name__ == '__main__':
