@@ -1,6 +1,6 @@
 import numpy as np
 import pulp as p
-import multiprocessing
+#import multiprocessing
 
 class Solver():
 	"""Consists of three solving algorithms"""
@@ -64,17 +64,18 @@ class Solver():
 			#improve all improvable states greedily
 			newpi = np.argmax(Vmat, axis = 1)
 			if((newpi == pi).all()): #or i >= 1000:
-				break;
+				break
 			pi = newpi
 			# i+=1
 			# if(not i%1000):
 			# 	print(i, diff)
 		return V, pi
 
-	# def __addconstraints(self, S0, S1, A0, A1):
-	# 	for s in range(S):
-	# 		pv= p.lpDot(self.T[s][a],self.v)
-	# 		lp_problem += V[s] >= p.lpSum([self.PR[s][a], self.gamma*pv])
+	# def __addconstraints(self, S0, S1, lp_problem):
+	# 	for s in range(S0, S1):
+	# 		for a in range(self.A):
+	# 			pv= p.lpDot(self.T[s][a],self.v)
+	# 			lp_problem += self.v[s] >= p.lpSum([self.PR[s][a], self.gamma*pv])
 
 	def linearProgram(self, error = 1e-12):
 		''' Linear Programming based solver '''
@@ -86,19 +87,35 @@ class Solver():
 		#objective function
 		for i in range(self.S):
 			self.v.append(V[i])
-		lp_problem += p.lpSum(self.v)#p.lpSum([V[i] for i in range(self.S)])
+		lp_problem += p.lpSum(self.v)
 		#constraints
-		# x = self.S//3
-		# y = self.A//3
 		for s in range(self.S):
 			for a in range(self.A):
-				pv= p.lpDot(self.T[s][a],self.v)
-				lp_problem += V[s] >= p.lpSum([self.PR[s][a], self.gamma*pv])
+				pv = p.LpAffineExpression([(V[x],self.T[s][a][x]) for x in range(self.S)])
+				constraint = p.lpSum([self.PR[s][a], self.gamma*pv ])
+				lp_problem += V[s] >= constraint
+
+		# if self.S%4:
+		# 	s0, s1 = 0, self.S//3
+		# else:
+		# 	s0, s1 = 0, self.S//4
+		# incr = s1
+		# processes = []
+		# for x in range(4):
+		# 	proc = multiprocessing.Process(target=self.__addconstraints, args=(s0, s1, lp_problem))
+		# 	processes.append(proc)
+		# 	proc.start()
+		# 	s0 = s1
+		# 	s1 = min(s1+incr, self.S)
+
+		# for proc in processes:
+		# 	proc.join()
 
 		# hard code for episodic? no need (due to initialization of mdp)
 		# if self.mdptype=="episodic":
 		# 	for state in self.end:
 		# 		lp_problem += V[state] == 0
+
 		#print(lp_problem)
 		status = lp_problem.solve(p.PULP_CBC_CMD(msg = 0)) #solve
 		#print(p.LpStatus[status])   # The solution status 

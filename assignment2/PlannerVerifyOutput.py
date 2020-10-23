@@ -3,7 +3,7 @@ import random,argparse,sys,subprocess,os
 parser = argparse.ArgumentParser()
 import numpy as np
 random.seed(0)
-
+import time
 input_file_ls = ['data/mdp/continuing-mdp-10-5.txt','data/mdp/continuing-mdp-2-2.txt','data/mdp/continuing-mdp-50-20.txt','data/mdp/episodic-mdp-10-5.txt','data/mdp/episodic-mdp-2-2.txt','data/mdp/episodic-mdp-50-20.txt']
 
 
@@ -25,8 +25,9 @@ class VerifyOutputPlanner:
                 print('test case',str(counter)+algo,":\t"," ".join(cmd_planner))
                 counter+=1
                 cmd_output = subprocess.check_output(cmd_planner,universal_newlines=True)
+                start = time.time()
                 self.verifyOutput(cmd_output,in_file,print_error)
-                    
+                print("Time taken:", time.time()-start)
             
             
 
