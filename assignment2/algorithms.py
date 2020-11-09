@@ -88,10 +88,17 @@ class Solver():
 		for i in range(self.S):
 			self.v.append(V[i])
 		lp_problem += p.lpSum(self.v)
+		# T_dict = {}
+		# for s in range(self.S):
+		# 	for a in range(self.A):
+		# 		T_dict.update({(s,a):{} })
+		# 		for x in range(self.S):
+		# 			T_dict[s,a].update({x: self.T[s,a,x]})
+		#print(T_dict.keys())
 		#constraints
 		for s in range(self.S):
 			for a in range(self.A):
-				pv = p.LpAffineExpression([(V[x],self.T[s][a][x]) for x in range(self.S)])
+				pv = p.LpAffineExpression([(V[x],self.T[s,a,x]) for x in range(self.S)])
 				constraint = p.lpSum([self.PR[s][a], self.gamma*pv ])
 				lp_problem += V[s] >= constraint
 
