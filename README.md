@@ -1,10 +1,13 @@
 # CS747-assignments
 
-### Assignment 1 Todo:
-1. KL UCB, Thompson, and Hinted Thompson
-2. Finding epsilon experiment
-3. Output Check (~10 hrs!!)
-4. Report
+### Assignment 1:
+On K-Armed bandits
 
-#### Submission: 25th September, 11:55 pm 
-------------------------------------------------------
+### Assignment 2:
+On mdps- solving a maze using 
+1. Howard's Policy iteration
+2. Value Iteration
+3. Linear programming
+
+### Assignment 3:
+On windy gridworld from Sutton and Barto(2018) ex ample 6.5
