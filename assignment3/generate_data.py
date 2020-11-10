@@ -28,13 +28,14 @@ def runwindy(update, king = False, stochastic = False):
 
 def sarsa0(king=False, stochastic=False):
 	if(verbose and stochastic): 
-		print("generating plot for king")
-	elif(verbose and king): 
 		print("generating plot for stochastic world")
+	elif(verbose and king): 
+		print("generating plot for king")
 	elif(verbose):
 		print("generating baseline plot")
 	update = "sarsa0"
-	x = runwindy(update)
+	if verbose:print(update)
+	x = runwindy(update, king=king, stochastic=stochastic)
 	y = np.arange(episodes)
 	plt.figure()
 	plt.plot(x,y, 'r')
@@ -164,7 +165,7 @@ if __name__ == '__main__':
 	if function == "all":
 		sarsa0()
 		sarsa0(king=True)
-		sarsa0(stochastic=True)
+		sarsa0(king=True, stochastic=True)
 		versus_methods()
 		versusWorlds()
 	elif function == "baseline":
