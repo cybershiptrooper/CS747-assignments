@@ -6,61 +6,61 @@ import matplotlib.pyplot as plt
 
 lr = 0.6
 episodes = 200
-steps = 10000
-epsilon = 0.05
-numSeeds = 10
+steps = 8000
+epsilon = 0.1
+numSeeds = 50
 
-def versus_methods(king = False, stochastic = False):
+
+def runwindy(update, king = False, stochastic = False):
+	data = np.zeros(episodes)
+	dataking = np.zeros(episodes)
+	for i in range(numSeeds):
+		windy = WindyGridWorld(king=king, stochastic = stochastic)
+		numStates = windy.numStates()
+		numActions = windy.numActions()
+		np.random.seed(numSeeds)
+		agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
+		datum = run(agent, env = windy, 
+			steps = steps, episodes=episodes, verbose = False)
+		data +=np.array(datum)
+	return np.cumsum(data/numSeeds)
+
+def versus_methods(king = False, stochastic = False, verbose=False):
 	windy = WindyGridWorld(king = king, stochastic=stochastic)
 	numStates = windy.numStates()
 	numActions = windy.numActions()
 	updates = ["sarsa0","expected-sarsa","Q"]
 	for update in updates:
-		print(update)
-		data = np.zeros(episodes)
-		for i in range(numSeeds):
-			np.random.seed(numSeeds)
-			agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
-			datum = run(agent, env = windy, 
-				steps = steps, episodes=episodes, verbose = False)
-			data +=np.array(datum)
-		data/=numSeeds
-		x = np.cumsum(data)
+		if(verbose): print(update)
+		x = runwindy(update, king, stochastic)
 		y = np.arange(episodes)
-		print(x[-1],y[-1])
+		if(verbose):print(x[-1], y[-1])
 		plt.plot(x,y)
 	plt.grid()
 	plt.legend(['sarsa(0)', 'expected-sarsa','Q-learning'])
 	figname = ""
 	if(king): figname+="king_"
 	if(stochastic): figname+="stoch_"
-	string = str(numSeeds)+'eps_'+str(epsilon)+'_lr_'+str(lr)+'.png'
+	string = str(numSeeds)+'seeds'+'_eps_'+str(epsilon)+'_lr_'+str(lr)+'.png'
 	plt.savefig('plots/'+figname+string)
 
-def versusking():
+
+def versusKing(verbose = False):
 	updates = ["sarsa0","expected-sarsa","Q"]
 	for update in updates:
-		data = np.zeros(episodes)
-		dataking = np.zeros(episodes)
-		for i in range(numSeeds):
-			windy = WindyGridWorld()
-			numStates = windy.numStates()
-			numActions = windy.numActions()
-			np.random.seed(numSeeds)
-			agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
-			datum = run(agent, env = windy, 
-				steps = steps, episodes=episodes, verbose = False)
-			data +=np.array(datum)
-
-			windyking = WindyGridWorld(king=True)
-			numStatesking = windyking.numStates()
-			numActionsking = windyking.numActions()
-			np.random.seed(numSeeds)
-			agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
-			datum = run(agent, env = windy, 
-				steps = steps, episodes=episodes, verbose = False)
-			dataking +=np.array(datum)
-	
+		if(verbose): print(update)
+		x = runwindy(update)
+		y = np.arange(episodes)
+		plt.figure()
+		plt.grid()
+		if(verbose):print("base:", x[-1], y[-1])
+		plt.plot(x,y)
+		x = runwindy(update, king = True)
+		if(verbose):print("king:", x[-1], y[-1])
+		plt.plot(x,y)
+		plt.legend(['base model', 'king'])
+		string = update+str(numSeeds)+'eps_'+str(epsilon)+'_lr_'+str(lr)+'.png'
+		plt.savefig('plots/versusking_'+string)
 
 def run(agent, env, steps = 2000, episodes=100,
 		verbose=False):
@@ -85,20 +85,67 @@ def run(agent, env, steps = 2000, episodes=100,
 
 	return data
 
-if __name__ == '__main__':
-	# parser = argparse.ArgumentParser()
-	versus_methods(king=True, stochastic = True)
+def msg():
+	return '''
+./runme.sh 		 [-h] [--lr LR] [--episodes EPISODES]
+                 	 [--epsilon EPSILON] [--seeds SEEDS] [--data DATA]
 
-	# windy = WindyGridWorld(king = True)
-	# numStates = windy.numStates()
-	# numActions = windy.numActions()
-	# print(numActions)
-	# updates = ["sarsa0","expected-sarsa","Q"]
-	# update = updates[1]
-	# agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
-	# datum = run(agent, env = windy, 
-	# 			steps = steps, episodes=episodes, verbose = False)
-	# x = np.cumsum(datum)
-	# y = np.arange(episodes)
-	# plt.plot(x,y)
-	# plt.savefig("plots/expected-sarsa")
+    OR
+
+python generate_data.py	 [-h] [--lr LR] [--episodes EPISODES]
+                 	 [--epsilon EPSILON] [--seeds SEEDS] [--data DATA]
+	'''
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(usage=msg())
+	parser.add_argument("--lr", default = 0.6,
+		help="learning rate of the agent"
+		)
+	parser.add_argument("--episodes", default = 200,)
+	parser.add_argument("--epsilon", default = 0.1,)
+	parser.add_argument("--seeds", default = 50,
+		help="number of seeds you want to average over"
+		)
+	parser.add_argument("--data", default = "all", 
+		help="the data you want to generate: must be one of "
+			"1. versus_methods (for a comparative plot of various update algorithms)"
+			"2. versusKing (for a comparative plot of king and base model)"
+			"3. all (for all of the above plots)"
+		)
+	parser.add_argument("-v", "--verbose", help="modify output verbosity", 
+                    action = "store_true")
+	# parser.add_argument("--verbose", default=0, 
+	# 	help = "0 for no command line output"
+	# 			"1 for getting updates in command line"
+	# 	)
+	
+	args = parser.parse_args()
+	lr = float(args.lr)
+	epsilon = float(args.epsilon)
+	try:
+		episodes = int(args.episodes)
+	except:
+		raise Exception("please enter integer episodes")
+	try:
+		numSeeds = int(args.seeds)
+	except:
+		raise Exception("please enter integer seeds")
+	verbose = args.verbose
+	function = args.data
+	if function == "all":
+		versus_methods(verbose=verbose)
+		# versus_methods(king=True, verbose=verbose)
+		# versus_methods(king=True, stochastic = True, verbose=verbose)
+		# versus_methods(stochastic=True, verbose=verbose)
+		# versusKing(verbose=verbose)
+	elif function == "versusKing":
+		versusKing(verbose=verbose)
+	elif function == "versus_methods":
+		versus_methods()
+		versus_methods(king=True, verbose=verbose)
+		versus_methods(king=True, stochastic = True, verbose=verbose)
+		versus_methods(stochastic=True, verbose=verbose)
+	else:
+		raise Exception("please enter valid arguments for data")
+	# versusKing(verbose=True)
+	
