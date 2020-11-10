@@ -10,4 +10,4 @@ On mdps- solving a maze using
 3. Linear programming
 
 ### Assignment 3:
-On windy gridworld from Sutton and Barto(2018) ex ample 6.5
+On windy gridworld from Sutton and Barto(2018) example 6.5
