@@ -8,7 +8,7 @@ lr = 0.6
 episodes = 200
 steps = 10000
 epsilon = 0.05
-numSeeds = 50
+numSeeds = 10
 
 def versus_methods(king = False, stochastic = False):
 	windy = WindyGridWorld(king = king, stochastic=stochastic)
@@ -34,7 +34,7 @@ def versus_methods(king = False, stochastic = False):
 	figname = ""
 	if(king): figname+="king_"
 	if(stochastic): figname+="stoch_"
-	string = 'eps_'+str(epsilon)+'_lr_'+str(lr)+'.png'
+	string = str(numSeeds)+'eps_'+str(epsilon)+'_lr_'+str(lr)+'.png'
 	plt.savefig('plots/'+figname+string)
 
 def versusking():
@@ -87,18 +87,18 @@ def run(agent, env, steps = 2000, episodes=100,
 
 if __name__ == '__main__':
 	# parser = argparse.ArgumentParser()
-	# versus_methods(king=True)
+	versus_methods(king=True, stochastic = True)
 
-	windy = WindyGridWorld(king = True)
-	numStates = windy.numStates()
-	numActions = windy.numActions()
-	print(numActions)
-	updates = ["sarsa0","expected-sarsa","Q"]
-	update = updates[1]
-	agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
-	datum = run(agent, env = windy, 
-				steps = steps, episodes=episodes, verbose = False)
-	x = np.cumsum(datum)
-	y = np.arange(episodes)
-	plt.plot(x,y)
-	plt.savefig("plots/expected-sarsa")
+	# windy = WindyGridWorld(king = True)
+	# numStates = windy.numStates()
+	# numActions = windy.numActions()
+	# print(numActions)
+	# updates = ["sarsa0","expected-sarsa","Q"]
+	# update = updates[1]
+	# agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
+	# datum = run(agent, env = windy, 
+	# 			steps = steps, episodes=episodes, verbose = False)
+	# x = np.cumsum(datum)
+	# y = np.arange(episodes)
+	# plt.plot(x,y)
+	# plt.savefig("plots/expected-sarsa")

@@ -55,8 +55,8 @@ class WindyGridWorld():
 		# actions
 		if(action in [0, 4, 6]):self.y += 1
 		elif(action in [1,5,7]):self.y -= 1
-		if(action in [2, 4, 6]):self.x += 1
-		elif(action in [3,5,7]):self.x -= 1
+		if(action in [2, 4, 5]):self.x += 1
+		elif(action in [3,6,7]):self.x -= 1
 		#boundary
 		x,y = self.x, self.y
 		self.x=0 if x<0 else (W if x>W else x)
