@@ -48,7 +48,7 @@ class WindyGridWorld():
 		# wind
 		if(self.stochastic):
 			wind = np.random.randint(-1,2)
-			self.y -= self.wind[self.x]*wind
+			self.y += self.wind[self.x]+wind
 		else:
 			self.y += self.wind[self.x]
 		# actions
