@@ -4,8 +4,6 @@ import numpy as np
 class WindyGridWorld():
 	"""
 	Windy Gridworld environment
-	arguments- 
-	model:(string)
 	"""
 	def __init__(self, king=False, stochastic=False):
 		super().__init__()
@@ -44,7 +42,8 @@ class WindyGridWorld():
 		'''
 		H,W = self.H, self.W
 		assert self.x<=W and self.y<=H
-		assert action < 8
+		if(self.king):assert action < 8
+		else:assert action < 4
 		assert not self.end()
 		# wind
 		if(self.stochastic):

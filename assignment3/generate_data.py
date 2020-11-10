@@ -27,6 +27,7 @@ def runwindy(update, king = False, stochastic = False):
 	return np.cumsum(data/numSeeds)
 
 def versus_methods(king = False, stochastic = False, verbose=False):
+	if(verbose): print("running versus_methods")
 	windy = WindyGridWorld(king = king, stochastic=stochastic)
 	numStates = windy.numStates()
 	numActions = windy.numActions()
@@ -47,6 +48,7 @@ def versus_methods(king = False, stochastic = False, verbose=False):
 
 
 def versusKing(verbose = False):
+	if(verbose): print("running versusKing")
 	updates = ["sarsa0","expected-sarsa","Q"]
 	for update in updates:
 		if(verbose): print(update)
@@ -130,7 +132,7 @@ if __name__ == '__main__':
 		raise Exception("please enter integer seeds")
 	verbose = args.verbose
 	function = args.data
-	
+
 	if function == "all":
 		versus_methods(verbose=verbose)
 		# versus_methods(king=True, verbose=verbose)

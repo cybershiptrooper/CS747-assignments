@@ -6,5 +6,7 @@ https://numpy.org/doc/stable/reference/random/generated/numpy.random.uniform.htm
 https://numpy.org/doc/stable/reference/random/generated/numpy.random.randint.html
 https://moonbooks.org/Articles/How-to-calculate-and-plot-a-cumulative-distribution-function-with-matplotlib-in-python-/
 
-bash-
-https://unix.stackexchange.com/questions/31414/how-can-i-pass-a-command-line-argument-into-a-shell-script
+bash and argparse-
+https://stackoverflow.com/questions/14340822/pass-bash-argument-to-python-script
+https://stackoverflow.com/questions/3853722/python-argparse-how-to-insert-newline-in-the-help-text
+https://stackoverflow.com/questions/21185526/custom-usage-function-in-argparse
