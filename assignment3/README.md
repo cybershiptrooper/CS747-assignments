@@ -24,4 +24,4 @@ optional arguments:
   -v, --verbose        modify output verbosity
 ``` 
 
-The default values of lr, epsilon and numSeeds are 0.7, 0.05 and 50 respectively. They were used to generate plots in the report.
+The default values of lr, epsilon, episodes and numSeeds are 0.7, 0.05, 200 and 50 respectively. They were used to generate plots in the report.
