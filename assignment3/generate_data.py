@@ -1,5 +1,6 @@
 import numpy as np
 import argparse
+from argparse import RawTextHelpFormatter
 from windygridworld import WindyGridWorld
 from agents import Agent
 import matplotlib.pyplot as plt
@@ -97,27 +98,24 @@ python generate_data.py	 [-h] [--lr LR] [--episodes EPISODES]
 	'''
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(usage=msg())
+	parser = argparse.ArgumentParser(usage=msg(), formatter_class= RawTextHelpFormatter)
 	parser.add_argument("--lr", default = 0.6,
 		help="learning rate of the agent"
 		)
-	parser.add_argument("--episodes", default = 200,)
-	parser.add_argument("--epsilon", default = 0.1,)
+	parser.add_argument("--episodes", default = 200, help="(integer) # episodes")
+	parser.add_argument("--epsilon", default = 0.1, help= "policy's epsilon")
 	parser.add_argument("--seeds", default = 50,
 		help="number of seeds you want to average over"
 		)
 	parser.add_argument("--data", default = "all", 
-		help="the data you want to generate: must be one of "
-			"1. versus_methods (for a comparative plot of various update algorithms)"
-			"2. versusKing (for a comparative plot of king and base model)"
-			"3. all (for all of the above plots)"
+		help="the data you want to generate: must be one of \n"+
+			"1. versus_methods (comparative plot of update algorithms)\n"+
+			"2. versusKing (comparative plot of king and base model)\n"+
+			"3. all (all of the above plots)\n",
+			
 		)
 	parser.add_argument("-v", "--verbose", help="modify output verbosity", 
                     action = "store_true")
-	# parser.add_argument("--verbose", default=0, 
-	# 	help = "0 for no command line output"
-	# 			"1 for getting updates in command line"
-	# 	)
 	
 	args = parser.parse_args()
 	lr = float(args.lr)
@@ -132,6 +130,7 @@ if __name__ == '__main__':
 		raise Exception("please enter integer seeds")
 	verbose = args.verbose
 	function = args.data
+	
 	if function == "all":
 		versus_methods(verbose=verbose)
 		# versus_methods(king=True, verbose=verbose)
