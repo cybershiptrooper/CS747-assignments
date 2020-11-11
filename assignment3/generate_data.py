@@ -12,15 +12,17 @@ epsilon = 0.05
 numSeeds = 50
 verbose = False
 
-def runwindy(update, king = False, stochastic = False):
+def runwindy(update, king = False, stochastic = False, rate=None, e=None):
 	data = np.zeros(episodes)
 	dataking = np.zeros(episodes)
 	for i in range(numSeeds):
+		np.random.seed(i)
 		windy = WindyGridWorld(king=king, stochastic = stochastic)
 		numStates = windy.numStates()
 		numActions = windy.numActions()
-		np.random.seed(numSeeds)
-		agent = Agent(numStates, numActions, update = update, lr=lr, epsilon= epsilon)
+		lrate = rate if rate is not None else lr
+		eps = e if e is not None else epsilon
+		agent = Agent(numStates, numActions, update = update, lr=lrate, epsilon= eps)
 		datum = run(agent, env = windy, 
 			steps = steps, episodes=episodes, verbose = False)
 		data +=np.array(datum)
@@ -68,6 +70,16 @@ def versus_methods(king = False, stochastic = False):
 	plt.title("versus_methods: "+figname[:-1])
 	plt.savefig('plots/'+figname+string+'.png')
 
+def best():
+	if(verbose):print("plotting best method on king(found for 200 episodes)")
+	x = runwindy('Q', king =True, stochastic=False)
+	y = np.arange(episodes)
+	print(x[-1],y[-1])
+	plt.figure()
+	plt.plot(x,y, 'r')
+	plt.title("Best method: Q-learning on king's move")
+	plt.grid()
+	plt.savefig("plots/best_king")
 
 def versusWorlds():
 	if(verbose): print("running versus_worlds")
@@ -75,8 +87,6 @@ def versusWorlds():
 	if(verbose): print(update)
 	x = runwindy(update)
 	y = np.arange(episodes)
-	plt.figure()
-	plt.grid()
 	plt.figure()
 	if(verbose):print("base:", x[-1], y[-1])
 	plt.plot(x,y)
@@ -88,9 +98,43 @@ def versusWorlds():
 	plt.plot(x,y)
 	plt.legend(['base model', 'king', 'stochastic(king)'])
 	# string = update+"_seeds_"+str(numSeeds)+'eps_'+str(epsilon)+'_lr_'+str(lr)
-	string = "sarsa(0) for different worlds"
+	string = "sarsa(0)-on-different-worlds"
 	plt.title(string)
+	plt.grid()
 	plt.savefig('plots/'+string+'.png')
+
+def versus_hyper():
+	update = "Q"
+	epsilons = [0.05, 0.01, 0.0]
+	lrs = [0.5, 0.6 , 0.7, 0.8]
+
+	if(verbose): print("comparing epsilons")
+	plt.figure()
+	for e in epsilons:
+		x = runwindy(update, king=True, e=e)
+		y = np.arange(episodes)
+		print("epsilon:",e, x[-1],y[-1])
+		plt.plot(x,y)
+	string = "sarsa(0)-on-different-epsilons"
+	plt.legend(['epsilon=0.05','epsilon=0.01','epsilon=0.0'])
+	plt.title(string)
+	plt.grid()
+	plt.savefig('plots/'+string+'.png')
+
+	if(verbose): print("comparing learning rates")
+	plt.figure()
+	for rate in lrs:
+		x = runwindy(update, rate=rate)
+		y = np.arange(episodes)
+		plt.figure()
+		print("rate:",rate, x[-1],y[-1])
+		plt.plot(x,y)
+	string = "sarsa(0)-on-different-lr"
+	plt.legend(['lr = 0.05','lr = 0.06','lr = 0.07','lr = 0.08'])
+	plt.title(string)
+	plt.grid()
+	plt.savefig('plots/'+string+'.png')
+
 
 def run(agent, env, steps = 2000, episodes=100,
 		verbose=False):
@@ -143,7 +187,8 @@ if __name__ == '__main__':
 			"stochastic(plot with stochastic wind and king's moves)\n"
 			"versus_methods (comparative plot of update algorithms)\n"
 			"versus_worlds (comparative plot of king and base model)\n"
-			"all (all of the above plots)\n",
+			"tuning (comparative plots of various hyperparameters)\n"
+			"all (all of the plots in report)\n",
 		)
 	parser.add_argument("-v", "--verbose", help="modify output verbosity", 
                     action = "store_true")
@@ -168,6 +213,9 @@ if __name__ == '__main__':
 		sarsa0(king=True, stochastic=True)
 		versus_methods()
 		versusWorlds()
+		best()
+		versus_epsilon()
+		versus_lr()
 	elif function == "baseline":
 		sarsa0()
 	elif function =="king":
@@ -178,6 +226,8 @@ if __name__ == '__main__':
 		versusWorlds()
 	elif function == "versus_methods":
 		versus_methods()
+	elif function == "tuning":
+		versus_hyper()
 	else:
 		raise Exception("please enter valid arguments for data")
 	# versusKing(verbose=True)

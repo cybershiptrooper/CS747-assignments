@@ -46,8 +46,8 @@ class WindyGridWorld():
 		else:assert action < 4
 		assert not self.end()
 		# wind
-		if(self.stochastic):
-			wind = np.random.randint(-1,2) if self.wind[self.x] !=0 else 0
+		if(self.stochastic and self.wind[self.x] !=0 ):
+			wind = np.random.randint(-1,2)
 			self.y += self.wind[self.x]+wind
 		else:
 			self.y += self.wind[self.x]
