@@ -33,7 +33,7 @@ class Agent():
 			return np.random.choice(self.A)
 
 	def sarsa0(self, s, a, r, s1, a1):
-		self.Q[s,a] += + self.lr*(r + self.gamma*self.Q[s1,a1]-self.Q[s,a])
+		self.Q[s,a] += self.lr*(r + self.gamma*self.Q[s1,a1]-self.Q[s,a])
 
 	def sarsaE(self, s, a, r, s1, a1):
 		#find expected Q
