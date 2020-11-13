@@ -1,6 +1,6 @@
 ### Windy gridworld
 
-The script runme.sh generates comparative plots as stated in its 'usage' provided below. To obtain all the plots specified in the report, try running the executable without any arguments.
+The script runme.sh generates the required plots as stated in its 'usage' provided below. To obtain all the plots specified in the report, try running the executable without any arguments. The plots are stored in a folder named 'plots', upon running the script.
 
 ```
 usage: 
