@@ -7,7 +7,6 @@ usage:
 ./runme.sh 		 [-h] [--lr LR] [--episodes EPISODES]
                  	 [--epsilon EPSILON] [--seeds SEEDS] [--data DATA]
 
-
 optional arguments:
   -h, --help           show this help message and exit
   --lr LR              learning rate of the agent
@@ -20,8 +19,10 @@ optional arguments:
                        stochastic(plot with stochastic wind and king's moves)
                        versus_methods (comparative plot of update algorithms)
                        versus_worlds (comparative plot of king and base model)
-                       all (all of the above plots)
+                       tuning (comparative plots of various hyperparameters)
+                       best (plot the best results baseline and King models)
+                       all (all of the plots in report)
   -v, --verbose        modify output verbosity
+
 ``` 
 
-The default values of lr, epsilon, episodes and numSeeds are 0.7, 0.05, 200 and 50 respectively. They were used to generate plots in the report.
