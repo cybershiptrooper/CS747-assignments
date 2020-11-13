@@ -225,8 +225,7 @@ if __name__ == '__main__':
 		versus_methods()
 		versusWorlds()
 		best()
-		versus_epsilon()
-		versus_lr()
+		versus_hyper()
 	elif function == "baseline":
 		sarsa0()
 	elif function =="king":
