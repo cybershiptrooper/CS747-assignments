@@ -46,7 +46,7 @@ class Agent():
 		self.Q[s,a] += self.lr*(target-self.Q[s,a])
 
 	def Q_Learning(self, s, a, r, s1, a1):
-		self.Q[s,a] += self.lr*(r + self.gamma*np.max(self.Q[s1,a]) -self.Q[s,a])
+		self.Q[s,a] += self.lr*(r + self.gamma*np.max(self.Q[s1]) -self.Q[s,a])
 
 	# def run(self, env, steps = 8000, episodes=100,
 	# 		verbose=False):
